@@ -1,3 +1,5 @@
+import { appendFileSync } from "node:fs";
+import { EOL } from "os";
 import puppeteer from "puppeteer";
 
 const keywords = ["veter"];
@@ -55,5 +57,10 @@ if (!results.some((i) => i.found)) {
   console.log("👎👎👎 No he trobat res...");
 }
 
-console.log("Closing...");
-await browser.close();
+await logResults(new Date(), section2url, JSON.stringify(results));
+
+async function logResults(date: Date, id: string, results: string) {
+  const line = [date.toLocaleDateString("es-ES"), id, results].join(",");
+  console.log(`Writing: ${line}`);
+  appendFileSync("logs.csv", line + EOL, "utf8");
+}
